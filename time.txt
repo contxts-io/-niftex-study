@@ -1,0 +1,28 @@
+CONTRACTS
+9  dec 2020: 10h→12h : 2   (total 2)
+9  dec 2020: 13h→18h : 5   (total 7)
+10 dec 2020: 15h→18h : 3   (total 10)
+11 dec 2020: 10h→11h : 1   (total 11)
+11 dec 2020: 14h→15h : 1   (total 12)
+17 dec 2020: 15h→17h : 2   (total 14)
+18 dec 2020: 15h→17h : 1   (total 15) → PAID
+23 dec 2020: 19h→20h : 1   (total 1)
+23 dec 2020: 22h→24h : 2   (total 3)
+25 dec 2020: 15h→16h : 1   (total 4)
+29 dec 2020: 14h→15h : 1   (total 5)
+17 jan 2021: 16h→18h : 2   (total 7)
+18 jan 2021: 16h→17h : 1   (total 8)
+24 jan 2021: 16h→18h : 2   (total 10)
+01 fev 2021: 11h→12h : 1   (total 11)
+02 fev 2021: 11h→12h : 1   (total 12)
+04 fev 2021: 22h→00h : 2   (total 14)
+05 fev 2021: 10h→11h : 1   (total 15) → PAID
+16 fev 2021: 21h→01h : 4   (total 4)
+18 fev 2021: 10h→11h : 1   (total 5)
+21 fev 2021: 13h→15h : 2   (total 7)
+24 fev 2021: 15h→17h : 2   (total 9)
+25 fev 2021: 11h→12h : 1   (total 10)
+8  mar 2021: 11h→12h : 1   (total 11)
+18 mar 2021: 14h→15h : 1   (total 12)
+28 mar 2021: 15h→16h : 1   (total 13)
+
