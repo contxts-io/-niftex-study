@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/proxy/Clones.sol";
+import "../../../../openzeppelin-contracts/contracts/proxy/Clones.sol";
 import "../ModuleBase.sol";
 import "../../governance/IGovernance.sol";
 import "../../initializable/CustomPricingCurve.sol";

@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/math/Math.sol";
+import "../../../../openzeppelin-contracts/contracts/utils/Address.sol";
+import "../../../../openzeppelin-contracts/contracts/utils/math/Math.sol";
 import "../../utils/Timers.sol";
 import "../ModuleBase.sol";
 

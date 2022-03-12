@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
-import "@openzeppelin/contracts/utils/math/Math.sol";
+import "../../openzeppelin-contracts/access/AccessControlEnumerable.sol";
+import "../../openzeppelin-contracts/utils/math/Math.sol";
 import "../wallet/ShardedWallet.sol";
 import "./IGovernance.sol";
 

@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import "@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import "../../../../openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol";
+import "../../../../openzeppelin-contracts/contracts/token/ERC777/IERC777Recipient.sol";
+import "../../../../openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol";
+import "../../../../openzeppelin-contracts/contracts/utils/introspection/ERC165.sol";
 import "../ModuleBase.sol";
 
 contract TokenReceiverModule is IModule, ModuleBase, ERC165, IERC721Receiver, IERC777Recipient, IERC1155Receiver

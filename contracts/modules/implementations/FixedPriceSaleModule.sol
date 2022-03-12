@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 pragma abicoder v2;
 
-import "@openzeppelin/contracts/proxy/Clones.sol";
+import "../../../../openzeppelin-contracts/contracts/proxy/Clones.sol";
 import "../../initializable/BondingCurve3.sol";
 import "../../governance/IGovernance.sol";
 import "../../utils/Timers.sol";
