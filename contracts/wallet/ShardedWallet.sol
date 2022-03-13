@@ -17,6 +17,8 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
     IGovernance public governance;
     address public artistWallet;
 
+    uint256 public initialBuyoutPricePerShard;
+
     event Received(address indexed sender, uint256 value, bytes data);
     event Execute(address indexed to, uint256 value, bytes data);
     event ModuleExecute(address indexed module, address indexed to, uint256 value, bytes data);
@@ -77,7 +79,8 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
         address         minter_,
         string calldata name_,
         string calldata symbol_,
-        address         artistWallet_
+        address         artistWallet_,
+        uint256 initialBuyoutPricePerShard_
     )
     external
     {
@@ -88,6 +91,7 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
         Ownable._setOwner(minter_);
         ERC20._initialize(name_, symbol_);
         artistWallet = artistWallet_;
+        initialBuyoutPricePerShard = initialBuyoutPricePerShard_;
 
         emit GovernanceUpdated(address(0), governance_);
     }

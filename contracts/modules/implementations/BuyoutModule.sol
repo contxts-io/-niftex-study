@@ -66,8 +66,17 @@ contract BuyoutModule is IModule, ModuleBase, Timers
     onlyDuringTimer(bytes32(uint256(uint160(address(wallet)))))
     {
         uint256 pricePerShard = _prices[wallet];
+        /// 처음엔 0이었을테니, 결국 바이아웃을 주창한 사람이 맡긴 토큰들일 것이다.
+        // 이 걸 다 사야 바이아웃이 무효가 된다.
         uint256 lockedShards  = wallet.balanceOf(address(this));
-        uint256 buyShards     = pricePerShard == 0 ? lockedShards : Math.min(lockedShards, msg.value * 10**18 / pricePerShard);
+        uint256 buyShards     =
+            pricePerShard == 0 ?
+                lockedShards :
+                Math.min(
+                    lockedShards,
+                    // 이렇게 하면 몇 개 살 수 있는지가 나온다.
+                    msg.value * 10**18 / pricePerShard
+                );
         uint256 buyprice      = buyShards * pricePerShard / 10**18;
         _deposit[wallet]     += buyprice;
 
@@ -75,6 +84,8 @@ contract BuyoutModule is IModule, ModuleBase, Timers
         wallet.transfer(msg.sender, buyShards);
 
         // do the close of all locked shards have been bought
+        // 이 게 같다는 건 Math.min(lockedShards, msg.value * 10**18 / pricePerShard)
+        // msg.value, 즉 지불한 금액이 lockedShards를 다 사고도 남는 것이므로, 바이아웃 방어에 성공한 것임.
         if (buyShards == lockedShards)
         {
             // stop buyout timer & reset wallet ownership
@@ -87,6 +98,9 @@ contract BuyoutModule is IModule, ModuleBase, Timers
             delete _proposers[wallet];
             delete _prices[wallet];
             delete _deposit[wallet];
+
+            // 바이아웃을 시도했던 사람 입장에서는 바이아웃이 실패했으니
+            // 바이아웃 시도했던 사람에게 돈 다시 돌려줌.
             Address.sendValue(payable(proposer), deposit);
 
             // emit event
@@ -141,5 +155,28 @@ contract BuyoutModule is IModule, ModuleBase, Timers
         delete _deposit[wallet];
 
         emit BuyoutFinalized(wallet);
+    }
+
+    /// 과제 해답
+    function buyOutWithInitialBuyoutPrice(ShardedWallet wallet)
+    external payable
+    onlyShardedWallet(wallet)
+    buyoutAuthorized(wallet, msg.sender)
+    onlyBeforeTimer(bytes32(uint256(uint160(address(wallet)))))
+    {
+        require(wallet.owner() == address(0));
+        uint256 ownedshards = wallet.balanceOf(msg.sender);
+        uint256 buyoutprice = (wallet.totalSupply() - ownedshards) * initialBuyoutPricePerShard / 10**18;
+
+        // 유저가 가지고 있는 샤드 혹시 모르니 다 회수
+        wallet.moduleTransfer(msg.sender, address(this), ownedshards);
+
+        // 신청한 유저가 해당 wallet의 주인이 됨
+        wallet.transferOwnership(_proposers[wallet]);
+
+        // 잔돈 거슬러줌
+        Address.sendValue(payable(msg.sender), msg.value - buyoutprice);
+
+        emit BuyoutOpened(wallet, msg.sender, pricePerShard);
     }
 }

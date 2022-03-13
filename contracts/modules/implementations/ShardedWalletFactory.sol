@@ -16,13 +16,14 @@ contract ShardedWalletFactory is IModule, ModuleBase, CloneFactory
         address               owner_,
         string       calldata name_,
         string       calldata symbol_,
-        address               artistWallet_
+        address               artistWallet_,
+        uint256 initialBuyoutPricePerShard_
     )
     external returns (address instance)
     {
         instance = _clone();
-        // 여기서 initialize 해줌.
+        // 여기서 shardedWallet이 실제로 initialize됨.
         ShardedWallet(payable(instance))
-            .initialize(governance_, owner_, name_, symbol_, artistWallet_);
+            .initialize(governance_, owner_, name_, symbol_, artistWallet_, initialBuyoutPricePerShard_);
     }
 }
