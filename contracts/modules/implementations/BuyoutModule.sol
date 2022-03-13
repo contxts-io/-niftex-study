@@ -36,6 +36,7 @@ contract BuyoutModule is IModule, ModuleBase, Timers
 
     constructor(address walletTemplate) ModuleBase(walletTemplate) {}
 
+    /// pricePerShard가 이 유저가 부르는 샤드당 바이아웃 가격, buyoutprice는 지불총액
     function openBuyout(ShardedWallet wallet, uint256 pricePerShard)
     external payable
     onlyShardedWallet(wallet)
@@ -51,6 +52,8 @@ contract BuyoutModule is IModule, ModuleBase, Timers
         _prices[wallet]    = pricePerShard;
         _deposit[wallet]   = buyoutprice;
 
+        /// 소유권을 이 바이아웃 컨트랙트로 옮겨놓는다.
+        /// 그러니까 법원 경매 신청해서, 법원이 임시로 소유주가 된 것이다.
         wallet.moduleTransferOwnership(address(this));
         wallet.moduleTransfer(msg.sender, address(this), ownedshards);
         Address.sendValue(payable(msg.sender), msg.value - buyoutprice);
@@ -94,6 +97,8 @@ contract BuyoutModule is IModule, ModuleBase, Timers
         Address.sendValue(payable(msg.sender), msg.value - buyprice);
     }
 
+    /// 바이아웃 신청을 당한 sharedeWallet의 한 유저가 바이아웃을 수락해서,
+    /// 샤드 소각하고 그에 해당하는 value를 가진 ETH를 받고 끝난 것이다.
     function claimBuyout(ShardedWallet wallet)
     external
     onlyAfterTimer(bytes32(uint256(uint160(address(wallet)))))
@@ -108,6 +113,8 @@ contract BuyoutModule is IModule, ModuleBase, Timers
         emit BuyoutClaimed(wallet, msg.sender);
     }
 
+    /// 옛날 방식의 claimBuyout인가 봄.
+    /// 우리가 보고 있는 건 v2고, v1 시절의 잔여물로 추정됨.
     function claimBuyoutBackup(ShardedWallet wallet)
     external
     onlyAfterTimer(bytes32(uint256(uint160(address(wallet)))))
@@ -122,6 +129,7 @@ contract BuyoutModule is IModule, ModuleBase, Timers
         emit BuyoutClaimed(wallet, msg.sender);
     }
 
+    /// 바이아웃이 성공해서 이제 sharedWallet 같은 것은 없고 유저가 NFT 가지게 됨.
     function finalizeBuyout(ShardedWallet wallet)
     external
     onlyAfterTimer(bytes32(uint256(uint160(address(wallet)))))

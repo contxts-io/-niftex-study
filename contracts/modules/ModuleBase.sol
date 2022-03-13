@@ -14,6 +14,7 @@ abstract contract ModuleBase is IModule
         walletTemplate = walletTemplate_;
     }
 
+    /// 처음에 ShardedWalletFactory에서 복제를 해서 생성했으니, 그렇게 생성되었는지를 체크하는 것이다.
     modifier onlyShardedWallet(ShardedWallet wallet)
     {
         require(isClone(walletTemplate, address(wallet)));
@@ -36,6 +37,7 @@ abstract contract ModuleBase is IModule
     internal view returns (bool result)
     {
         bytes20 targetBytes = bytes20(target);
+        /// 어셈블리어로 같은지 확인해주는 코드들
         assembly {
             let clone := mload(0x40)
             mstore(clone, 0x363d3d373d3d3d363d7300000000000000000000000000000000000000000000)

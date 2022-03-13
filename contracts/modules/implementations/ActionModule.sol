@@ -11,6 +11,7 @@ contract ActionModule is IModule, ModuleBase, Timers
 {
     string public constant override name = type(ActionModule).name;
 
+    /// 이것들은 deploy.js에서 실제로 배포될 때는 정상적인 숫자로 들어가지게 된다. 일단 여기선 string으로부터 해싱한 더미 값들이다.
     // bytes32 public constant ACTION_DURATION = bytes32(uint256(keccak256("ACTION_DURATION")) - 1);
     bytes32 public constant ACTION_DURATION = 0x05f91198c37cc2578c2915e1614db3bf5c90e3387bd106bdfbb0da82514418dd;
     // bytes32 public constant ACTION_AUTH_RATIO = bytes32(uint256(keccak256("ACTION_AUTH_RATIO")) - 1);

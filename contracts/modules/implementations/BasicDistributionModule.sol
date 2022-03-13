@@ -24,6 +24,8 @@ contract BasicDistributionModule is IModule, ModuleBase
     external onlyOwner(wallet, msg.sender)
     {
         require(wallet.totalSupply() == 0);
+        /// 소유권을 그 누구도 가지지 않은 address인 0번으로 옮김
+        /// 이제 owner로서 함수를 실행 못 함. 이 분배 함수 실행되기 전에 해 놔야 함.
         wallet.moduleTransferOwnership(address(0));
         for (uint256 i = 0; i < mints.length; ++i)
         {

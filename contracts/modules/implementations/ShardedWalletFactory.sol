@@ -21,6 +21,8 @@ contract ShardedWalletFactory is IModule, ModuleBase, CloneFactory
     external returns (address instance)
     {
         instance = _clone();
-        ShardedWallet(payable(instance)).initialize(governance_, owner_, name_, symbol_, artistWallet_);
+        // 여기서 initialize 해줌.
+        ShardedWallet(payable(instance))
+            .initialize(governance_, owner_, name_, symbol_, artistWallet_);
     }
 }

@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/math/Math.sol";
+import "../../../openzeppelin-contracts/contracts/utils/Address.sol";
+import "../../../openzeppelin-contracts/contracts/utils/math/Math.sol";
 import "../governance/IGovernance.sol";
 import "../initializable/Ownable.sol";
 import "../initializable/ERC20.sol";
@@ -23,6 +23,7 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
     event GovernanceUpdated(address indexed oldGovernance, address indexed newGovernance);
     event ArtistUpdated(address indexed oldArtist, address indexed newArtist);
 
+    /// 등록된 모듈이어야 실행 가능하다.
     modifier onlyModule()
     {
         require(_isModule(msg.sender), "Access restricted to modules");
@@ -34,6 +35,7 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
      *************************************************************************/
     constructor()
     {
+        // 배포된 거버넌스 컨트랙트 주소를 하드 코딩해버림.
         governance = IGovernance(address(0xdead));
     }
 
@@ -43,6 +45,8 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
         emit Received(msg.sender, msg.value, bytes(""));
     }
 
+    /// data 없이 이 컨트랙트가 토큰 송금을 받으면 fallback 함수가 자동으로 돌아간다고 함.
+    /// 무슨 내용의 함수인지는 모르겠는데 그냥 받았다고 이벤트 찍어주는 게 다인 듯.
     fallback()
     external payable
     {
@@ -77,6 +81,7 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
     )
     external
     {
+        /// 아마 초기화할 때 0으로 돼 있는 뭔가가 있나봄. 상속 관계 등이 복잡해서 잘 안 찾아짐..
         require(address(governance) == address(0));
 
         governance = IGovernance(governance_);
@@ -96,7 +101,9 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
     /*************************************************************************
      *                          Owner interactions                           *
      *************************************************************************/
-    function execute(address to, uint256 value, bytes calldata data)
+    // 이 컨트랙트가 직접 abi와 data를 넣어서 call하게 만드는 함수.. test js file 참조
+    // 컨트랙트 단에서 직접 쓰이는 일은 없는 것 같다.
+   function execute(address to, uint256 value, bytes calldata data)
     external onlyOwner()
     {
         Address.functionCallWithValue(to, data, value);
@@ -116,6 +123,10 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
     function moduleExecute(address to, uint256 value, bytes calldata data)
     external onlyModule()
     {
+        // 배포된 컨트랙트라면 functionCallWithValue가 작동 가능하다.
+        // 계속 참조해서 들어가면 target.call{value: value}(data)이 나온다.
+        // avoid too low level code라고 나오는 거 보니 내부 구현구조까지 직접 들어가서 call해버리는 함수인 듯.
+        // 지금은 사용이 지양되고 있는 것 같다.
         if (Address.isContract(to))
         {
             Address.functionCallWithValue(to, data, value);
@@ -156,6 +167,8 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
     {
         emit GovernanceUpdated(address(governance), newGovernance);
 
+        /// deploy.js에서 [await shardedwallet.ALLOW_GOVERNANCE_UPGRADE()]: true,
+        /// 위와 같은 코드가 작동하였기 때문에 아래와 같은 require문이 유의미하다.
         require(governance.getConfig(address(this), ALLOW_GOVERNANCE_UPGRADE) > 0);
         require(Address.isContract(newGovernance));
         governance = IGovernance(newGovernance);

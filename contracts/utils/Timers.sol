@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 
 contract Timers
 {
+    /// 이 mapping을 조작해서 시간을 표현함.
     mapping(bytes32 => uint256) private _deadlines;
 
     event TimerStarted(bytes32 indexed timer, uint256 deadline);
