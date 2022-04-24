@@ -168,6 +168,7 @@ contract BuyoutModule is IModule, ModuleBase, Timers
         uint256 ownedshards = wallet.balanceOf(msg.sender);
         uint256 buyoutprice = (wallet.totalSupply() - ownedshards) * initialBuyoutPricePerShard / 10**18;
 
+        require(msg.value >= buyoutprice);
         // 유저가 가지고 있는 샤드 혹시 모르니 다 회수
         wallet.moduleTransfer(msg.sender, address(this), ownedshards);
 
@@ -178,5 +179,6 @@ contract BuyoutModule is IModule, ModuleBase, Timers
         Address.sendValue(payable(msg.sender), msg.value - buyoutprice);
 
         emit BuyoutOpened(wallet, msg.sender, pricePerShard);
+        emit BuyoutFinalized(wallet);
     }
 }

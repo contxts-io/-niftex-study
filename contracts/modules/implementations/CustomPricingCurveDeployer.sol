@@ -16,6 +16,7 @@ contract CustomPricingCurveDeployer is IModule, ModuleBase
 
     event NewBondingCurve(ShardedWallet indexed wallet_, address indexed curve_);
 
+
     modifier isAllowed(ShardedWallet wallet) {
         require(wallet.owner() == address(0));
         _;
@@ -33,7 +34,7 @@ contract CustomPricingCurveDeployer is IModule, ModuleBase
         uint256 liquidityTimelock_
     ) public payable
     isAllowed(wallet)
-    onlyShardedWallet(wallet) 
+    onlyShardedWallet(wallet)
     returns (address curve) {
         // only sharded wallet OR one owning 100% fraction supply can create custom pricing curve
         require(msg.sender == address(wallet) || wallet.balanceOf(msg.sender) == wallet.totalSupply());
@@ -52,7 +53,7 @@ contract CustomPricingCurveDeployer is IModule, ModuleBase
                     liquidityTimelock_
                 );
             }
-            
+
             emit NewBondingCurve(wallet, curve);
         }
     }

@@ -89,7 +89,7 @@ contract ShardedWallet is Ownable, ERC20, ERC1363Approve
 
         governance = IGovernance(governance_);
         Ownable._setOwner(minter_);
-        ERC20._initialize(name_, symbol_);
+        ERC20._initialize(name_, symbol_); //wrapped ethereum, WETH
         artistWallet = artistWallet_;
         initialBuyoutPricePerShard = initialBuyoutPricePerShard_;
 
